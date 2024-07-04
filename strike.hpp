@@ -12,8 +12,6 @@ struct IntCoords {
 
 class Strike {
 private:
-  char *currentBoard;
-  char *currentMarkBoard;
   char Letters[20] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
                       'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u'};
 
@@ -55,7 +53,6 @@ public:
     downTree(board, markBoard, intCoordinates);
     leftTree(board, markBoard, intCoordinates);
     rightTree(board, markBoard, intCoordinates);
-
   }
 
   // tree rlud
@@ -119,7 +116,7 @@ public:
     }
   }
   void downTree(char board[][21], char markBoard[][21],
-              IntCoords intCoordinates) {
+                IntCoords intCoordinates) {
     int treeLength = 0;
     int bufferInt = 0;
 
@@ -141,7 +138,7 @@ public:
     std::cout << "down tree height == " << treeLength << "\n";
 
     // leftbach
-    for (int i = intCoordinates.y; i < intCoordinates.y + treeLength  ; i++) {
+    for (int i = intCoordinates.y; i < intCoordinates.y + treeLength; i++) {
       // i == tree height base
       // check left
       int bufferInt = 0;
@@ -159,7 +156,7 @@ public:
       }
     }
     // right branch
-    for (int i = intCoordinates.y; i < intCoordinates.y + treeLength  ; i++) {
+    for (int i = intCoordinates.y; i < intCoordinates.y + treeLength; i++) {
       // i == tree height base
       // check left
       int bufferInt = 0;
@@ -179,7 +176,7 @@ public:
   }
 
   void leftTree(char board[][21], char markBoard[][21],
-              IntCoords intCoordinates) {
+                IntCoords intCoordinates) {
     int treeLength = 0;
     int bufferInt = 0;
 
@@ -187,7 +184,7 @@ public:
               << "\n";
 
     for (int i = intCoordinates.x; i > 0; i--) {
-      std::cout << board[intCoordinates.y][i] << "\n";
+      // std::cout << board[intCoordinates.y][i] << "\n";
       if (board[intCoordinates.y][i] == '0') {
         treeLength++;
       } else if (bufferInt == 0) {
@@ -198,14 +195,14 @@ public:
         break;
       }
     }
-    std::cout << "left tree height == " << treeLength << "\n";
+    // std::cout << "left tree height == " << treeLength << "\n";
 
     // leftbach
-    for (int i = intCoordinates.x; i > intCoordinates.x - treeLength  ; i--) {
+    for (int i = intCoordinates.x; i > intCoordinates.x - treeLength; i--) {
       // i == tree height base
       // check left
       int bufferInt = 0;
-      int branchLeftX =i ;
+      int branchLeftX = i;
       int branchLeftY = intCoordinates.y;
       while (bufferInt <= 0) {
         if (board[branchLeftY][branchLeftX] == '0') {
@@ -219,11 +216,11 @@ public:
       }
     }
     // right branch
-    for (int i = intCoordinates.x; i > intCoordinates.x - treeLength  ; i--) {
+    for (int i = intCoordinates.x; i > intCoordinates.x - treeLength; i--) {
       // i == tree height base
       // check left
       int bufferInt = 0;
-      int branchLeftX =  i;
+      int branchLeftX = i;
       int branchLeftY = intCoordinates.y;
       while (bufferInt <= 0) {
         if (board[branchLeftY][branchLeftX] == '0') {
@@ -238,7 +235,7 @@ public:
     }
   }
   void rightTree(char board[][21], char markBoard[][21],
-              IntCoords intCoordinates) {
+                 IntCoords intCoordinates) {
     int treeLength = 0;
     int bufferInt = 0;
 
@@ -260,11 +257,11 @@ public:
     std::cout << "left tree height == " << treeLength << "\n";
 
     // leftbach
-    for (int i = intCoordinates.x; i < intCoordinates.x + treeLength  ; i++) {
+    for (int i = intCoordinates.x; i < intCoordinates.x + treeLength; i++) {
       // i == tree height base
       // check left
       int bufferInt = 0;
-      int branchLeftX =i ;
+      int branchLeftX = i;
       int branchLeftY = intCoordinates.y;
       while (bufferInt <= 0) {
         if (board[branchLeftY][branchLeftX] == '0') {
@@ -278,11 +275,11 @@ public:
       }
     }
     // right branch
-    for (int i = intCoordinates.x; i < intCoordinates.x + treeLength  ; i++) {
+    for (int i = intCoordinates.x; i < intCoordinates.x + treeLength; i++) {
       // i == tree height base
       // check left
       int bufferInt = 0;
-      int branchLeftX =  i;
+      int branchLeftX = i;
       int branchLeftY = intCoordinates.y;
       while (bufferInt <= 0) {
         if (board[branchLeftY][branchLeftX] == '0') {
@@ -296,12 +293,33 @@ public:
       }
     }
   }
+
+  void checkLoss(char board[][21], IntCoords coords) {
+    if (board[coords.y][coords.x] == 'X') {
+      std::cout << "MINE WAS HIT YOU LOST ";
+      exit(1);
+    }
+  }
+  void checkWin(char board[][21]) {
+    int win = 0;
+    for (int i = 1; i < 21; i++) {
+      for (int j = 1; j < 21; j++) {
+        if (board[i][j] == '0'){
+            win++;
+        }
+      }
+    }
+    if(win==60 ){
+        std::cout << "GAME WONNN ";
+        exit(1);
+    }
+  }
+
   Strike(char board[][21], char markBoard[][21],
          std::string coordinatesString) {
-    currentBoard = *board;
-    currentMarkBoard = *markBoard;
     Coordinates validCoordinates = readCoords(coordinatesString);
     IntCoords intCoordinates = charCoordsToInt(validCoordinates);
+    checkLoss(board, intCoordinates);
     openBoard(board, markBoard, intCoordinates);
   }
 };
